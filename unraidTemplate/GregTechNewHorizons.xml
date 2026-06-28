@@ -58,12 +58,12 @@
     Type="Port"
     Name="Minecraft Port"
     Target="25565"
-    Default="25565"
+    Default="29400"
     Mode="tcp"
-    Description="Host-Port der auf den Minecraft-Port 25565 im Container gemappt wird."
+    Description="Externer Host-Port der auf den internen Minecraft-Port 25565 gemappt wird."
     Display="always"
     Required="true"
-    Mask="false">25565</Config>
+    Mask="false">29400</Config>
 
   <Config
     Type="Port"

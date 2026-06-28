@@ -6,7 +6,7 @@ services:
     tty: true
     stdin_open: true
     ports:
-      - "25565:25565"
+      - "29400:25565"
       - "2324:2324"
     environment:
       EULA: "TRUE"
