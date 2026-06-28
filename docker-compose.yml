@@ -18,6 +18,9 @@ services:
       # Alte Config-Backups beim Start löschen (optional)
       GTNH_DELETE_BACKUPS: "false"
 
+      # Bestätigt automatisch die FML-Frage beim Update (mod list changed for existing world)
+      JVM_OPTS: "-Dfml.queryResult=confirm"
+
       # Memory – 6GB minimum, +0.5–1GB pro Spieler je nach Spielfortschritt
       MEMORY: "6G"
 

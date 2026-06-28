@@ -105,4 +105,14 @@
     Required="false"
     Mask="false"/>
 
+  <Config
+    Type="Variable"
+    Name="JVM Options"
+    Target="JVM_OPTS"
+    Default="-Dfml.queryResult=confirm"
+    Description="Bestätigt automatisch die FML-Frage beim Update (Mod-Liste hat sich geändert). Verhindert, dass der Container beim Start hängt."
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
 </Container>
