@@ -1,0 +1,17 @@
+services:
+  gtnh:
+    image: ghcr.io/sling2009/gt-new-horizons:latest
+    container_name: greg_tech_new_horizons
+    environment:
+      EULA: "true"
+      MEM_MIN: "6G"
+      MEM_MAX: "6G"
+      GREGTECH_VERSION: "2.8.4"
+      GREGTECH_JAVA_VERSION: "17-25"
+    ports:
+      - "25565:25565"
+    volumes:
+      - ./data:/home/minecraft
+    network_mode: bridge
+    restart: unless-stopped
+    stop_grace_period: 30s

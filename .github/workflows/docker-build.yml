@@ -1,0 +1,122 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  test-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run merge unit tests
+        run: bash test/test_merge.sh
+
+  test-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image for testing
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          tags: gtnh-test:latest
+
+      - name: Create fake server pack
+        run: |
+          mkdir -p /tmp/fake-pack/{mods,config}
+          echo "existing_key=old_value" >  /tmp/fake-pack/config/test.properties
+          echo "new_key=default_value"  >> /tmp/fake-pack/config/test.properties
+          printf '{"existing":"old","new_setting":true}\n' > /tmp/fake-pack/config/test.json
+          echo "server-port=25565"      >  /tmp/fake-pack/server.properties
+          echo "new_server_key=value"   >> /tmp/fake-pack/server.properties
+          touch /tmp/fake-pack/startserver-java9.sh
+          cd /tmp/fake-pack && zip -r /tmp/fake-pack.zip .
+
+      - name: Prepare simulated existing installation
+        run: |
+          mkdir -p ./data/config
+          echo "2.8.1"                        > ./data/.gtnh-version
+          echo "existing_key=my_custom_value" > ./data/config/test.properties
+          printf '{"existing":"my_value"}\n'  > ./data/config/test.json
+          echo "server-port=25565"            > ./data/server.properties
+          chmod -R 777 ./data
+
+      - name: Run update flow (no server start)
+        run: |
+          docker run --rm \
+            -e EULA=true \
+            -e GREGTECH_VERSION=2.9.0 \
+            -e GREGTECH_JAVA_VERSION=17-25 \
+            -e GTNH_PACK_URL=file:///tmp/fake-pack.zip \
+            -e SKIP_SERVER_START=true \
+            -v "$(pwd)/data:/home/minecraft" \
+            -v /tmp/fake-pack.zip:/tmp/fake-pack.zip \
+            gtnh-test:latest
+
+      - name: Verify merge results
+        run: |
+          grep -q "existing_key=my_custom_value" ./data/config/test.properties \
+            || (echo "FAIL: existing_key overwritten"; exit 1)
+          grep -q "new_key=default_value" ./data/config/test.properties \
+            || (echo "FAIL: new_key not added"; exit 1)
+          jq -e '.existing == "my_value"' ./data/config/test.json > /dev/null \
+            || (echo "FAIL: JSON existing value lost"; exit 1)
+          jq -e '.new_setting == true' ./data/config/test.json > /dev/null \
+            || (echo "FAIL: JSON new_setting not added"; exit 1)
+          grep -q "new_server_key=value" ./data/server.properties \
+            || (echo "FAIL: server.properties new key missing"; exit 1)
+          grep -q "2.9.0" ./data/.gtnh-version \
+            || (echo "FAIL: version file not updated"; exit 1)
+          echo "All checks passed."
+
+  build-and-push:
+    needs: [test-merge, test-update]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/sling2009/gt-new-horizons
+          tags: |
+            type=ref,event=tag
+            type=raw,value=latest
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

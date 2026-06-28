@@ -1,0 +1,16 @@
+# Server data (runtime, not versioned)
+data/
+
+# Environment files
+.env
+.env.*
+
+# Editor/IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
