@@ -1,72 +1,108 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>GregTech - New Horizons</Name>
-  <Repository>ghcr.io/sling2009/gt-new-horizons:latest</Repository>
-  <Registry>https://github.com/Sling2009/gregTech/pkgs/container/gt-new-horizons</Registry>
+  <Repository>itzg/minecraft-server:java25</Repository>
+  <Registry>https://hub.docker.com/r/itzg/minecraft-server</Registry>
   <Network>bridge</Network>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
-  <Support>https://github.com/Sling2009/gregTech</Support>
-  <Project>https://www.cseforge.com/minecraft/modpacks/gt-new-horizons</Project>
-  <Overview>[b]GregTech New Horizons Minecraft Server[/b][br]A fully automated server container for quickly deploying a GTNH server.[br][br]Setup:[br][li]You must accept the [b]EULA[/b], otherwise the server will not start.[br][li]With the [b]OPS[/b] variable you can define admin players.[br][li]Whitelist can be manually created in the whitelist.json file in the volume.</Overview>
+  <Support>https://docker-minecraft-server.readthedocs.io/en/latest/types-and-platforms/mod-platforms/gtnh/</Support>
+  <Project>https://www.curseforge.com/minecraft/modpacks/gt-new-horizons</Project>
+  <Overview>[b]GregTech New Horizons Minecraft Server[/b][br]Powered by itzg/minecraft-server with nativer GTNH-Unterstützung. Das Image lädt das Modpack automatisch herunter und hält es aktuell.[br][br]Setup:[br][li]Du musst die [b]EULA[/b] auf [b]true[/b] setzen, sonst startet der Server nicht.[br][li]Mit [b]OPS[/b] kannst du Admin-Spieler festlegen (kommagetrennt).[br][li]Die [b]Version[/b] kann jederzeit geändert werden – die Welt bleibt erhalten.</Overview>
   <Category>GameServers:</Category>
-  <ExtraSearchTerms>minecraft,gtnh,gregtech,new horizons</ExtraSearchTerms>
+  <ExtraSearchTerms>minecraft,gtnh,gregtech,new horizons,itzg</ExtraSearchTerms>
   <Icon>https://mmcreviews.com/wp-content/uploads/2023/12/636125694388807951.png</Icon>
+
   <Config
     Type="Path"
     Name="Server Directory"
-    Target="/home/minecraft"
-    Default="/mnt/user/appdata/gregtech/"
+    Target="/data"
+    Default="/mnt/user/appdata/gtnh/"
     Mode="rw"
-    Description="This is where the server data, world, configuration etc. are stored."
+    Description="Speicherort für Welt, Mods, Configs und alle Server-Daten."
     Display="always"
     Required="true"
     Mask="false"/>
+
   <Config
     Type="Variable"
     Name="EULA"
     Target="EULA"
     Default="false"
-    Description="Accept the Minecraft EULA (https://account.mojang.com/documents/minecraft_eula) – must be set to 'true'."
+    Description="Minecraft EULA akzeptieren (https://account.mojang.com/documents/minecraft_eula) – muss 'true' sein."
     Display="always"
     Required="true"
     Mask="false"/>
+
   <Config
     Type="Variable"
-    Name="GREGTECH_VERSION"
-    Target="GREGTECH_VERSION"
-    Default="2.8.1"
-    Description="GregTech New Horizons server pack version. Changing this value triggers an automatic update on the next container start. World data is preserved."
-    Display="advanced"
+    Name="GTNH Version"
+    Target="GTNH_PACK_VERSION"
+    Default="2.8.4"
+    Description="GTNH Server-Pack Version. Ändern triggert automatisches Update beim nächsten Start. Weltdaten bleiben erhalten."
+    Display="always"
     Required="false"
     Mask="false"/>
+
   <Config
     Type="Variable"
-    Name="Xms"
-    Target="MEM_MIN"
-    Default="6G"
-    Description="Value for minimum memory allocation"
-    Display="advanced"
+    Name="OPS"
+    Target="OPS"
+    Default=""
+    Description="Kommagetrennte Minecraft-Spielernamen die Admin-Rechte erhalten sollen."
+    Display="always"
     Required="false"
     Mask="false"/>
-  <Config
-    Type="Variable"
-    Name="Xmx"
-    Target="MEM_MAX"
-    Default="6G"
-    Description="Value for maximum memory allocation"
-    Display="advanced"
-    Required="false"
-    Mask="false"/>
+
   <Config
     Type="Port"
     Name="Minecraft Port"
     Target="25565"
-    Default="29400"
+    Default="25565"
     Mode="tcp"
-    Description="Host port mapped to 25565 inside the container"
+    Description="Host-Port der auf den Minecraft-Port 25565 im Container gemappt wird."
+    Display="always"
+    Required="true"
+    Mask="false">25565</Config>
+
+  <Config
+    Type="Variable"
+    Name="Memory"
+    Target="MEMORY"
+    Default="6G"
+    Description="RAM-Zuweisung für den Server. Minimum 6G, empfohlen 8G. +0.5–1G pro Spieler je nach Spielfortschritt."
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Type="Variable"
+    Name="TYPE"
+    Target="TYPE"
+    Default="GTNH"
+    Description="Muss auf GTNH gesetzt bleiben."
     Display="advanced"
     Required="true"
-    Mask="false">29400</Config>
-</Container>
+    Mask="false"/>
 
+  <Config
+    Type="Variable"
+    Name="Skip Update Check"
+    Target="SKIP_GTNH_UPDATE_CHECK"
+    Default="false"
+    Description="Auf 'true' setzen um den Update-Check beim Start zu überspringen (schnellerer Start nach erstem Setup)."
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Type="Variable"
+    Name="Delete Config Backups"
+    Target="GTNH_DELETE_BACKUPS"
+    Default="false"
+    Description="Alte Config-Backups beim Start automatisch löschen."
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+</Container>
