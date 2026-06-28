@@ -7,6 +7,7 @@ services:
     stdin_open: true
     ports:
       - "25565:25565"
+      - "2324:2324"
     environment:
       EULA: "TRUE"
       TYPE: "GTNH"
@@ -22,7 +23,7 @@ services:
       JVM_OPTS: "-Dfml.queryResult=confirm"
 
       # Memory – 6GB minimum, +0.5–1GB pro Spieler je nach Spielfortschritt
-      MEMORY: "6G"
+      MEMORY: "16G"
 
       # Server-Einstellungen
       OPS: ""    # Kommagetrennte Spielernamen für OPs
@@ -30,8 +31,8 @@ services:
     volumes:
       - ./data:/data
 
-    mem_limit: 8g
-    mem_reservation: 6g
+    mem_limit: 18g
+    mem_reservation: 16g
 
     logging:
       driver: "json-file"

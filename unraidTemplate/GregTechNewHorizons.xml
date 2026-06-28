@@ -66,11 +66,22 @@
     Mask="false">25565</Config>
 
   <Config
+    Type="Port"
+    Name="AE-Web Port"
+    Target="2324"
+    Default="2324"
+    Mode="tcp"
+    Description="Port für AE-Web (Applied Energistics Web Interface)."
+    Display="always"
+    Required="false"
+    Mask="false">2324</Config>
+
+  <Config
     Type="Variable"
     Name="Memory"
     Target="MEMORY"
-    Default="6G"
-    Description="RAM-Zuweisung für den Server. Minimum 6G, empfohlen 8G. +0.5–1G pro Spieler je nach Spielfortschritt."
+    Default="16G"
+    Description="RAM-Zuweisung für den Server. Minimum 6G, empfohlen 16G. +0.5–1G pro Spieler je nach Spielfortschritt."
     Display="advanced"
     Required="false"
     Mask="false"/>
