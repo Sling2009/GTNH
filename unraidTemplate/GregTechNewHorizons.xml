@@ -11,7 +11,7 @@
   <Overview>[b]GregTech New Horizons Minecraft Server[/b][br]Powered by itzg/minecraft-server with nativer GTNH-Unterstützung. Das Image lädt das Modpack automatisch herunter und hält es aktuell.[br][br]Setup:[br][li]Du musst die [b]EULA[/b] auf [b]true[/b] setzen, sonst startet der Server nicht.[br][li]Mit [b]OPS[/b] kannst du Admin-Spieler festlegen (kommagetrennt).[br][li]Die [b]Version[/b] kann jederzeit geändert werden – die Welt bleibt erhalten.</Overview>
   <Category>GameServers:</Category>
   <ExtraSearchTerms>minecraft,gtnh,gregtech,new horizons,itzg</ExtraSearchTerms>
-  <Icon>https://mmcreviews.com/wp-content/uploads/2023/12/636125694388807951.png</Icon>
+  <Icon>https://media.forgecdn.net/avatars/thumbnails/53/488/64/64/636125694388807951.png</Icon>
 
   <Config
     Type="Path"
