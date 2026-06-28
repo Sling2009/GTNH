@@ -177,8 +177,8 @@ Neue Image-Versionen werden automatisch via **GitHub Actions** gebaut und auf di
 3. Nur wenn alle Tests grün sind: Image wird gebaut und auf ghcr.io gepusht
 
 ```bash
-git tag v1.5-2.8.4
-git push origin v1.5-2.8.4
+git tag v1.x
+git push origin v1.x
 ```
 
 Benötigte GitHub-Secrets: **keine** – der Build verwendet `GITHUB_TOKEN`.
